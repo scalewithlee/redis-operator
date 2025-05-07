@@ -25,3 +25,4 @@ Dockerfile.cross
 *.swo
 *~
 NOTES.md
+QUESTIONS.md
