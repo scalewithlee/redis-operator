@@ -1,0 +1,167 @@
+---
+apiVersion: apiextensions.k8s.io/v1
+kind: CustomResourceDefinition
+metadata:
+  annotations:
+    controller-gen.kubebuilder.io/version: v0.12.0
+  name: redisclusters.cache.my.domain
+spec:
+  group: cache.my.domain
+  names:
+    kind: RedisCluster
+    listKind: RedisClusterList
+    plural: redisclusters
+    singular: rediscluster
+  scope: Namespaced
+  versions:
+  - additionalPrinterColumns:
+    - description: Number of master nodes
+      jsonPath: .spec.size
+      name: Size
+      type: integer
+    - description: Replicas per master
+      jsonPath: .spec.replicasPerMaster
+      name: Replicas
+      type: integer
+    - description: Cluster status
+      jsonPath: .status.clusterStatus
+      name: Status
+      type: string
+    - jsonPath: .metadata.creationTimestamp
+      name: Age
+      type: date
+    name: v1alpha1
+    schema:
+      openAPIV3Schema:
+        description: RedisCluster is the Schema for the redisclusters API
+        properties:
+          apiVersion:
+            description: 'APIVersion defines the versioned schema of this representation
+              of an object. Servers should convert recognized schemas to the latest
+              internal value, and may reject unrecognized values. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#resources'
+            type: string
+          kind:
+            description: 'Kind is a string value representing the REST resource this
+              object represents. Servers may infer this from the endpoint the client
+              submits requests to. Cannot be updated. In CamelCase. More info: https://git.k8s.io/community/contributors/devel/sig-architecture/api-conventions.md#types-kinds'
+            type: string
+          metadata:
+            type: object
+          spec:
+            description: RedisClusterSpec defines the desired state of RedisCluster
+            properties:
+              password:
+                description: Password is the password for Redis authentication (will
+                  be auto-generated if empty)
+                type: string
+              persistenceEnabled:
+                description: PersistenceEnabled determines if the Redis data should
+                  be persistent
+                type: boolean
+              redisVersion:
+                description: RedisVersion is the version of Redis to deploy
+                enum:
+                - 6.2.0
+                - 6.2.6
+                - 7.0.0
+                - 7.0.15
+                - 7.2.0
+                - 7.2.4
+                type: string
+              replicasPerMaster:
+                description: ReplicasPerMaster is the number of replica nodes per
+                  master
+                format: int32
+                maximum: 5
+                minimum: 0
+                type: integer
+              resources:
+                description: Resources defines the resource requirements for each
+                  redis node
+                properties:
+                  cpuLimit:
+                    description: CPU limit for Redis containers
+                    type: string
+                  cpuRequest:
+                    description: CPU request for Redis containers
+                    type: string
+                  memoryLimit:
+                    description: Memory limit for Redis containers
+                    type: string
+                  memoryRequest:
+                    description: Memory request for Redis containers
+                    type: string
+                type: object
+              size:
+                description: Size is the number of Redis master nodes in the cluster
+                format: int32
+                maximum: 10
+                minimum: 1
+                type: integer
+              storageClassName:
+                description: StorageClassName defines the storage class to use for
+                  PVCs
+                type: string
+              storageSize:
+                description: StorageSize defines the storage size for each Redis node
+                type: string
+            required:
+            - redisVersion
+            - replicasPerMaster
+            - size
+            type: object
+          status:
+            description: RedisClusterStatus defines the observed state of RedisCluster
+            properties:
+              clusterStatus:
+                description: ClusterStatus is the current status of the Redis cluster
+                enum:
+                - Creating
+                - Ready
+                - Scaling
+                - Updating
+                - Error
+                type: string
+              lastBackupTime:
+                description: LastBackupTime is the timestamp of the last successful
+                  backup
+                format: date-time
+                type: string
+              nodes:
+                description: Nodes contains the current status of each Redis node
+                  in the cluster
+                items:
+                  description: RedisNodeStatus contains status information about an
+                    individual Redis node
+                  properties:
+                    masterNodeId:
+                      description: MasterNodeID is the ID of the master node (only
+                        for replicas)
+                      type: string
+                    podName:
+                      description: PodName is the name of the Pod running this Redis
+                        node
+                      type: string
+                    role:
+                      description: Role is the role of this Redis node (master or
+                        replica)
+                      type: string
+                    status:
+                      description: Status is the status of the Redis node
+                      enum:
+                      - Pending
+                      - Running
+                      - Failed
+                      type: string
+                  required:
+                  - podName
+                  - role
+                  - status
+                  type: object
+                type: array
+            type: object
+        type: object
+    served: true
+    storage: true
+    subresources:
+      status: {}
