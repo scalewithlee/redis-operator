@@ -15,7 +15,7 @@ spec:
   persistenceEnabled: true
   storageSize: "1Gi"
   resources:
-    cpuRequests: "100m"
-    memoryRequests: "128Mi"
+    cpuRequest: "100m"
+    memoryRequest: "128Mi"
     cpuLimit: "200m"
     memoryLimit: "256Mi"
