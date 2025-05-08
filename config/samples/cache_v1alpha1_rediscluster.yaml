@@ -9,11 +9,12 @@ metadata:
     app.kubernetes.io/created-by: redis-operator
   name: redis-sample
 spec:
-  size: 3
+  size: 1
   replicasPerMaster: 1
   redisVersion: "7.2.4"
   persistenceEnabled: true
   storageSize: "1Gi"
+  storageClassName: "standard"
   resources:
     cpuRequest: "100m"
     memoryRequest: "128Mi"

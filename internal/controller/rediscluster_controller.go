@@ -234,7 +234,7 @@ func (r *RedisClusterReconciler) Reconcile(ctx context.Context, req ctrl.Request
 
 			role := "master"
 			var masterNodeID string
-			if int32(ordinal) >= redisCluster.Spec.Size {
+			if int32(ordinal) >= redisCluster.Spec.Size { // The first `size` Pods are masters, the remaining are replicas
 				role = "replica"
 				// Calculate which master this replica belongs to
 				masterIndex := (ordinal - int(redisCluster.Spec.Size)) % int(redisCluster.Spec.Size)
@@ -299,7 +299,7 @@ cluster-enabled yes
 cluster-config-file /data/nodes.conf
 cluster-node-timeout 5000
 appendonly yes
-protected-mode node
+protected-mode no
 `
 	cm := &corev1.ConfigMap{
 		ObjectMeta: metav1.ObjectMeta{
