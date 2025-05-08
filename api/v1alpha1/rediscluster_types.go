@@ -100,6 +100,9 @@ type RedisNodeStatus struct {
 	// +optional
 	MasterNodeID string `json:"masterNodeId,omitempty"`
 
+	// NodeID is the Redis node ID
+	NodeID string `json:"nodeId"`
+
 	// Status is the status of the Redis node
 	// +kubebuilder:validation:Enum=Pending;Running;Failed
 	Status string `json:"status"`

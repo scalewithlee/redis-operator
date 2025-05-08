@@ -138,6 +138,9 @@ spec:
                       description: MasterNodeID is the ID of the master node (only
                         for replicas)
                       type: string
+                    nodeId:
+                      description: NodeID is the Redis node ID
+                      type: string
                     podName:
                       description: PodName is the name of the Pod running this Redis
                         node
@@ -154,6 +157,7 @@ spec:
                       - Failed
                       type: string
                   required:
+                  - nodeId
                   - podName
                   - role
                   - status

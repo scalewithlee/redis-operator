@@ -7,6 +7,15 @@ metadata:
     app.kubernetes.io/part-of: redis-operator
     app.kubernetes.io/managed-by: kustomize
     app.kubernetes.io/created-by: redis-operator
-  name: rediscluster-sample
+  name: redis-sample
 spec:
-  # TODO(user): Add fields here
+  size: 3
+  replicasPerMaster: 1
+  redisVersion: "7.2.4"
+  persistenceEnabled: true
+  storageSize: "1Gi"
+  resources:
+    cpuRequests: "100m"
+    memoryRequests: "128Mi"
+    cpuLimit: "200m"
+    memoryLimit: "256Mi"
